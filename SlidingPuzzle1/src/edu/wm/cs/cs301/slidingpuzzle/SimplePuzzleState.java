@@ -4,11 +4,12 @@ public class SimplePuzzleState implements PuzzleState {
 	
 	public int[][] grid = new int[4][4];
 	
-	
-
 	@Override
 	public void setToInitialState(int dimension, int numberOfEmptySlots) {
 		// TODO Auto-generated method stub
+		//2-D array that represents the grid, populate it beginning with 1 all the way up to the 16-numberOfEmptySlots
+		//after, populate the rest with 0 which signifies empty positions
+		// TODO set parent and operation to NULL
 		int displayNumber = 1;
 		int total = dimension * dimension - numberOfEmptySlots;
 		//int[][] grid = new int[dimension][dimension];
@@ -24,7 +25,7 @@ public class SimplePuzzleState implements PuzzleState {
 				}
 			}
 		}
-		for (int i = 0; i < dimension; i++) {
+		for (int i = 0; i < dimension; i++) {//just printing out the array to see populated array is expected
 			for (int j = 0; j < dimension; j++) {
 				System.out.println(grid[i][j]);
 			}
@@ -32,12 +33,12 @@ public class SimplePuzzleState implements PuzzleState {
 	}
 	@Override
 	public int getValue(int row, int column) {
-		
 		// TODO Auto-generated method stub)
+		// Use public grid to check to see if the value is a number other than 0, then return that value in the location
 		if (grid[row][column] != 0) {
+			System.out.println(grid[row][column]);//not necessary just checking location
 			return grid[row][column];
 		}
-			
 		return 0;
 	}
 
@@ -78,8 +79,9 @@ public class SimplePuzzleState implements PuzzleState {
 	}
 
 	@Override
-	public boolean isEmpty(int row, int column) {//done
-		// TODO Auto-generated method stub
+	public boolean isEmpty(int row, int column) {
+		//use getValue method to see if the value at the mouse click is a 0, if so return true.
+		
 		int val = getValue(row, column);
 		if (val == 0) {
 			return true;
