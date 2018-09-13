@@ -36,7 +36,6 @@ public class SimplePuzzleState implements PuzzleState {
 		if (grid[row][column] != 0) {
 			return grid[row][column];
 		}
-			
 		return 0;
 	}
 
