@@ -11,6 +11,7 @@ public class SimplePuzzleState implements PuzzleState {
 		// TODO Auto-generated method stub
 		int displayNumber = 1;
 		int total = dimension * dimension - numberOfEmptySlots;
+		//int[][] grid = new int[dimension][dimension];
 		System.out.println("emp:"+ numberOfEmptySlots);
 		for (int i = 0; i < dimension; i++) {
 			for (int j = 0; j < dimension; j++) {
@@ -36,6 +37,7 @@ public class SimplePuzzleState implements PuzzleState {
 		if (grid[row][column] != 0) {
 			return grid[row][column];
 		}
+			
 		return 0;
 	}
 
