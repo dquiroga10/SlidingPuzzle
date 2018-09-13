@@ -45,36 +45,51 @@ public class SimplePuzzleState implements PuzzleState {
 	@Override
 	public PuzzleState getParent() {
 		// TODO Auto-generated method stub
+		// get the parent (previous) move that caused the current state to be achieved
+		// initial state does not have a parent
 		return null;
 	}
 
 	@Override
 	public Operation getOperation() {
 		// TODO Auto-generated method stub
+		//the operation which allowed for the current state to be shown
+		//is set(called on) when applying move or drag operations
+		// initial state has no operation
 		return null;
 	}
 
 	@Override
 	public int getPathLength() {
 		// TODO Auto-generated method stub
+		// initial state has path length 0 every operation after that increments it by 1
+		// drag operation is the number of equivalent sequence of move operations 
+		
+		//Note that any move operation increases the path length even if the player
+		//gets closer to the solution. So the path length is not the distance
+		//between initial state and current state but the number of puzzle states
+		//that are linked together in a sequence with the getParent() function.
 		return 0;
 	}
 
 	@Override
 	public PuzzleState move(int row, int column, Operation op) {
 		// TODO Auto-generated method stub
+		// check PuzzleState for directions
 		return null;
 	}
 
 	@Override
 	public PuzzleState drag(int startRow, int startColumn, int endRow, int endColumn) {
 		// TODO Auto-generated method stub
+		// // check PuzzleState for directions
 		return null;
 	}
 
 	@Override
 	public PuzzleState shuffleBoard(int pathLength) {
 		// TODO Auto-generated method stub
+		// check PuzzleState for directions
 		return null;
 	}
 
@@ -92,6 +107,7 @@ public class SimplePuzzleState implements PuzzleState {
 	@Override
 	public PuzzleState getStateWithShortestPath() {
 		// TODO Auto-generated method stub
+		// check PuzzleState for directions
 		return null;
 	}
 
