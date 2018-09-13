@@ -2,7 +2,9 @@ package edu.wm.cs.cs301.slidingpuzzle;
 
 public class SimplePuzzleState implements PuzzleState {
 	
-	public int[][] grid = new int[4][4];
+	public int dim = 4;
+	public int emps = 1;
+	public int[][] grid = new int[dim][dim];
 	
 	@Override
 	public void setToInitialState(int dimension, int numberOfEmptySlots) {
@@ -10,6 +12,8 @@ public class SimplePuzzleState implements PuzzleState {
 		//2-D array that represents the grid, populate it beginning with 1 all the way up to the 16-numberOfEmptySlots
 		//after, populate the rest with 0 which signifies empty positions
 		// TODO set parent and operation to NULL
+		dim = dimension;
+		emps = numberOfEmptySlots;
 		int displayNumber = 1;
 		int total = dimension * dimension - numberOfEmptySlots;
 		//int[][] grid = new int[dimension][dimension];
@@ -76,6 +80,15 @@ public class SimplePuzzleState implements PuzzleState {
 	public PuzzleState move(int row, int column, Operation op) {
 		// TODO Auto-generated method stub
 		// check PuzzleState for directions
+		if (isEmpty(row, column+1)) {//MOVERIGHT
+			int temp = grid[row][column];
+			grid[row][column+1] = temp;
+			grid[row][column] = 0;
+			getValue(row, column);
+			getValue(row, column+1);
+			//return ;
+		}
+			
 		return null;
 	}
 
