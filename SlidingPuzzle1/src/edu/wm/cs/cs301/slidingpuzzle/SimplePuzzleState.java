@@ -1,13 +1,16 @@
 package edu.wm.cs.cs301.slidingpuzzle;
 
 public class SimplePuzzleState implements PuzzleState {
+	
+	public int[][] grid = new int[4][4];
+	
+	
 
 	@Override
 	public void setToInitialState(int dimension, int numberOfEmptySlots) {
 		// TODO Auto-generated method stub
 		int displayNumber = 1;
 		int total = dimension * dimension - numberOfEmptySlots;
-		int[][] grid = new int[dimension][dimension];
 		System.out.println("emp:"+ numberOfEmptySlots);
 		for (int i = 0; i < dimension; i++) {
 			for (int j = 0; j < dimension; j++) {
@@ -30,7 +33,10 @@ public class SimplePuzzleState implements PuzzleState {
 	public int getValue(int row, int column) {
 		
 		// TODO Auto-generated method stub)
-		
+		if (grid[row][column] != 0) {
+			return grid[row][column];
+		}
+			
 		return 0;
 	}
 
@@ -77,7 +83,7 @@ public class SimplePuzzleState implements PuzzleState {
 		if (val == 0) {
 			return true;
 		}
-		return true;
+		return false;
 	}
 
 	@Override
