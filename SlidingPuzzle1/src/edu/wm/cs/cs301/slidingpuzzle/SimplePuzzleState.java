@@ -28,7 +28,7 @@ public class SimplePuzzleState implements PuzzleState {
 		this.emptySlots = numberOfEmptySlots;
 		int total = dimension * dimension - this.emptySlots;
 		this.grid = new int[dimension][dimension];
-		System.out.println("emp:"+ numberOfEmptySlots);
+		//System.out.println("emp:"+ numberOfEmptySlots);
 		for (int i = 0; i < dimension; i++) {
 			for (int j = 0; j < dimension; j++) {
 				if (displayNumber < total + 1){
@@ -53,7 +53,7 @@ public class SimplePuzzleState implements PuzzleState {
 		// TODO Auto-generated method stub)
 		// Use public grid to check to see if the value is a number other than 0, then return that value in the location
 		if (this.grid[row][column] != 0) {
-			System.out.println(this.grid[row][column]);//not necessary just checking location
+			//System.out.println(this.grid[row][column]);//not necessary just checking location
 			return this.grid[row][column];
 		}
 		return 0;
@@ -94,11 +94,54 @@ public class SimplePuzzleState implements PuzzleState {
 		// TODO Auto-generated method stub
 		// check PuzzleState for directions
 		
+		
 		SimplePuzzleState newgrid = new SimplePuzzleState();
 		newgrid.grid = new int[grid.length][grid.length];
 		newgrid.grid = this.grid;
 		
-		switch(op) {
+		if (isEmpty(row, column + 1)) {
+			
+			newgrid.op = Operation.MOVERIGHT;
+			newgrid.parent = this;
+			int temp = newgrid.grid[row][column];
+			newgrid.grid[row][column] = 0;
+			newgrid.grid[row][column+1] = temp;
+			newgrid.pathLength = this.pathLength + 1;
+			return newgrid;
+			
+		}if (isEmpty(row, column - 1)) {
+			
+			newgrid.op = Operation.MOVELEFT;
+			newgrid.parent = this;
+			int temp = newgrid.grid[row][column];
+			newgrid.grid[row][column] = 0;
+			newgrid.grid[row][column-1] = temp;
+			newgrid.pathLength = this.pathLength + 1;
+			return newgrid;
+			
+		}if (isEmpty(row + 1, column)) {
+			
+			newgrid.op = Operation.MOVEUP;
+			newgrid.parent = this;
+			int temp = newgrid.grid[row][column];
+			newgrid.grid[row][column] = 0;
+			newgrid.grid[row+1][column] = temp;
+			newgrid.pathLength = this.pathLength + 1;
+			return newgrid;
+			
+		}if (isEmpty(row - 1, column)) {
+			
+			newgrid.op = Operation.MOVEDOWN;
+			newgrid.parent = this;
+			int temp = newgrid.grid[row][column];
+			newgrid.grid[row][column] = 0;
+			newgrid.grid[row-1][column] = temp;
+			newgrid.pathLength = this.pathLength + 1;
+			return newgrid;
+		}
+		
+		
+		/*switch(op) {
 
 			case MOVERIGHT: { //MOVERIGHT
 
@@ -111,6 +154,7 @@ public class SimplePuzzleState implements PuzzleState {
 				return newgrid;
 			}
 			case MOVELEFT: {
+				
 				newgrid.op = Operation.MOVELEFT;
 				newgrid.parent = this;
 				int temp = newgrid.grid[row][column];
@@ -120,6 +164,7 @@ public class SimplePuzzleState implements PuzzleState {
 				return newgrid;
 			}
 			case MOVEUP: {
+				
 				newgrid.op = Operation.MOVEUP;
 				newgrid.parent = this;
 				int temp = newgrid.grid[row][column];
@@ -129,6 +174,7 @@ public class SimplePuzzleState implements PuzzleState {
 				return newgrid;
 			}
 			case MOVEDOWN: {
+				
 				newgrid.op = Operation.MOVEDOWN;
 				newgrid.parent = this;
 				int temp = newgrid.grid[row][column];
@@ -137,7 +183,7 @@ public class SimplePuzzleState implements PuzzleState {
 				newgrid.pathLength = this.pathLength + 1;
 				return newgrid;
 			}
-		}
+		}*/
 		return null;
 	}
 
@@ -159,10 +205,16 @@ public class SimplePuzzleState implements PuzzleState {
 	public boolean isEmpty(int row, int column) {
 		//use getValue method to see if the value at the mouse click is a 0, if so return true.
 		
-		int val = getValue(row, column);
-		if (val == 0) {
-			return true;
+		if (row >= grid.length || column >= grid.length || row < 0 || column < 0) {
+			return false;
 		}
+		
+		
+		if (getValue(row,column) == 0) {
+			return true;
+			
+		}
+	
 		return false;
 	}
 
