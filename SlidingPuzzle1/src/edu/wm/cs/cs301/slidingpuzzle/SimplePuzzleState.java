@@ -2,9 +2,21 @@ package edu.wm.cs.cs301.slidingpuzzle;
 
 public class SimplePuzzleState implements PuzzleState {
 	
-	public int dim = 4;
-	public int emps = 1;
-	public int[][] grid = new int[dim][dim];
+	private int[][] grid;
+	private int pathLength;
+	private int emptySlots;
+	private PuzzleState parent;
+	private Operation op;
+	
+	public SimplePuzzleState() {
+
+		this.grid = null;
+		this.parent = null;
+		this.op = null;
+		this.emptySlots = 0;
+		this.pathLength = 0;
+		
+	}	
 	
 	@Override
 	public void setToInitialState(int dimension, int numberOfEmptySlots) {
@@ -12,36 +24,37 @@ public class SimplePuzzleState implements PuzzleState {
 		//2-D array that represents the grid, populate it beginning with 1 all the way up to the 16-numberOfEmptySlots
 		//after, populate the rest with 0 which signifies empty positions
 		// TODO set parent and operation to NULL
-		dim = dimension;
-		emps = numberOfEmptySlots;
 		int displayNumber = 1;
-		int total = dimension * dimension - numberOfEmptySlots;
-		//int[][] grid = new int[dimension][dimension];
+		this.emptySlots = numberOfEmptySlots;
+		int total = dimension * dimension - this.emptySlots;
+		this.grid = new int[dimension][dimension];
 		System.out.println("emp:"+ numberOfEmptySlots);
 		for (int i = 0; i < dimension; i++) {
 			for (int j = 0; j < dimension; j++) {
 				if (displayNumber < total + 1){
-					grid[i][j] = displayNumber;
+					this.grid[i][j] = displayNumber;
 					displayNumber = displayNumber +1;
 				}else if (displayNumber >= total) {
-					grid[i][j] = 0;
+					this.grid[i][j] = 0;
 					displayNumber = displayNumber +1;
 				}
 			}
-		}
-		for (int i = 0; i < dimension; i++) {//just printing out the array to see populated array is expected
+		}//PuzzleState state = grid;
+		
+		/*for (int i = 0; i < dimension; i++) {//just printing out the array to see populated array is expected
 			for (int j = 0; j < dimension; j++) {
 				System.out.println(grid[i][j]);
 			}
-		}
+		}*/
 	}
+	
 	@Override
 	public int getValue(int row, int column) {
 		// TODO Auto-generated method stub)
 		// Use public grid to check to see if the value is a number other than 0, then return that value in the location
-		if (grid[row][column] != 0) {
-			System.out.println(grid[row][column]);//not necessary just checking location
-			return grid[row][column];
+		if (this.grid[row][column] != 0) {
+			System.out.println(this.grid[row][column]);//not necessary just checking location
+			return this.grid[row][column];
 		}
 		return 0;
 	}
@@ -51,7 +64,7 @@ public class SimplePuzzleState implements PuzzleState {
 		// TODO Auto-generated method stub
 		// get the parent (previous) move that caused the current state to be achieved
 		// initial state does not have a parent
-		return null;
+		return this.parent;
 	}
 
 	@Override
@@ -60,7 +73,7 @@ public class SimplePuzzleState implements PuzzleState {
 		//the operation which allowed for the current state to be shown
 		//is set(called on) when applying move or drag operations
 		// initial state has no operation
-		return null;
+		return this.op;
 	}
 
 	@Override
@@ -73,22 +86,58 @@ public class SimplePuzzleState implements PuzzleState {
 		//gets closer to the solution. So the path length is not the distance
 		//between initial state and current state but the number of puzzle states
 		//that are linked together in a sequence with the getParent() function.
-		return 0;
+		return this.pathLength;
 	}
 
 	@Override
 	public PuzzleState move(int row, int column, Operation op) {
 		// TODO Auto-generated method stub
 		// check PuzzleState for directions
-		if (isEmpty(row, column+1)) {//MOVERIGHT
-			int temp = grid[row][column];
-			grid[row][column+1] = temp;
-			grid[row][column] = 0;
-			getValue(row, column);
-			getValue(row, column+1);
-			//return ;
+		
+		SimplePuzzleState newgrid = new SimplePuzzleState();
+		newgrid.grid = new int[grid.length][grid.length];
+		newgrid.grid = this.grid;
+		
+		switch(op) {
+
+			case MOVERIGHT: { //MOVERIGHT
+
+				newgrid.op = Operation.MOVERIGHT;
+				newgrid.parent = this;
+				int temp = newgrid.grid[row][column];
+				newgrid.grid[row][column] = 0;
+				newgrid.grid[row][column+1] = temp;
+				newgrid.pathLength = this.pathLength + 1;
+				return newgrid;
+			}
+			case MOVELEFT: {
+				newgrid.op = Operation.MOVELEFT;
+				newgrid.parent = this;
+				int temp = newgrid.grid[row][column];
+				newgrid.grid[row][column] = 0;
+				newgrid.grid[row][column-1] = temp;
+				newgrid.pathLength = this.pathLength + 1;
+				return newgrid;
+			}
+			case MOVEUP: {
+				newgrid.op = Operation.MOVEUP;
+				newgrid.parent = this;
+				int temp = newgrid.grid[row][column];
+				newgrid.grid[row][column] = 0;
+				newgrid.grid[row+1][column] = temp;
+				newgrid.pathLength = this.pathLength + 1;
+				return newgrid;
+			}
+			case MOVEDOWN: {
+				newgrid.op = Operation.MOVEDOWN;
+				newgrid.parent = this;
+				int temp = newgrid.grid[row][column];
+				newgrid.grid[row][column] = 0;
+				newgrid.grid[row-1][column] = temp;
+				newgrid.pathLength = this.pathLength + 1;
+				return newgrid;
+			}
 		}
-			
 		return null;
 	}
 

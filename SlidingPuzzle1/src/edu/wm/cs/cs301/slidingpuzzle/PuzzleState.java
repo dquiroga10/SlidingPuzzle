@@ -120,6 +120,7 @@ public interface PuzzleState {
 	 * @return new PuzzleState for legal move. For illegal move operation it returns null.
 	 */
 	public PuzzleState move(int row, int column, Operation op);
+	
 	/**
 	 * A drag is a short cut for a possible series of move operations. 
 	 * In the GUI, it results from a drag operations across multiple empty slots.
