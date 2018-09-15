@@ -86,7 +86,7 @@ public class SimplePuzzleState implements PuzzleState {
 		//gets closer to the solution. So the path length is not the distance
 		//between initial state and current state but the number of puzzle states
 		//that are linked together in a sequence with the getParent() function.
-		return 0;
+		return this.pathLength;
 	}
 
 	@Override
