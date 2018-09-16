@@ -82,6 +82,8 @@ public class SimplePuzzleState implements PuzzleState {
 			}
 		}
 		
+		// different operations that first check to see there is a empty space in operation call and then update all the
+		// variables so that the puzzles state is being followed properly
 		switch(op) {
 
 			case MOVERIGHT: { 
