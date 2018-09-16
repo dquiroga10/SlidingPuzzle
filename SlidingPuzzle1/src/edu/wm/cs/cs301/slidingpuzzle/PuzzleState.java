@@ -176,4 +176,7 @@ public interface PuzzleState {
 	 * shortest possible path to solution (initial) state.
 	 */
 	public PuzzleState getStateWithShortestPath();
+	
+	
+	public boolean equals(Object obj);
 }
