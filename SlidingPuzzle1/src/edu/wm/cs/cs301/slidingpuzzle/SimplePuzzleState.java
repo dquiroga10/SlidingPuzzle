@@ -21,82 +21,59 @@ public class SimplePuzzleState implements PuzzleState {
 	
 	@Override
 	public void setToInitialState(int dimension, int numberOfEmptySlots) {
-		// TODO Auto-generated method stub
-		//2-D array that represents the grid, populate it beginning with 1 all the way up to the 16-numberOfEmptySlots
-		//after, populate the rest with 0 which signifies empty positions
 		// TODO set parent and operation to NULL
+		
+		// setting up to populate grid and set how many empty slots are needed
 		int displayNumber = 1;
 		this.emptySlots = numberOfEmptySlots;
 		int total = dimension * dimension - this.emptySlots;
 		this.grid = new int[dimension][dimension];
-		//System.out.println("emp:"+ numberOfEmptySlots);
+		
+		// for loops to iterate through the 2-D array to populate grid by incrementing the displayNumber variable 
 		for (int i = 0; i < dimension; i++) {
 			for (int j = 0; j < dimension; j++) {
 				if (displayNumber < total + 1){
 					this.grid[i][j] = displayNumber;
 					displayNumber = displayNumber +1;
+					
+				// sets the remaining spaces in grid to 0 in order to create empty slots
 				}else if (displayNumber >= total) {
 					this.grid[i][j] = 0;
 					displayNumber = displayNumber +1;
 				}
 			}
-		}//PuzzleState state = grid;
-		
-		/*for (int i = 0; i < dimension; i++) {//just printing out the array to see populated array is expected
-			for (int j = 0; j < dimension; j++) {
-				System.out.println(grid[i][j]);
-			}
-		}*/
+		}
 	}
 	
 	@Override
 	public int getValue(int row, int column) {
-		// TODO Auto-generated method stub)
-		// Use public grid to check to see if the value is a number other than 0, then return that value in the location
+		
 		return this.grid[row][column];
-		/*if (this.grid[row][column] != 0) {
-			//System.out.println(this.grid[row][column]);//not necessary just checking location
-			return this.grid[row][column];
-		}
-		return 0;*/
 	}
 
 	@Override
 	public PuzzleState getParent() {
-		// TODO Auto-generated method stub
-		// get the parent (previous) move that caused the current state to be achieved
-		// initial state does not have a parent
+
 		return this.parent;
 	}
 
 	@Override
 	public Operation getOperation() {
-		// TODO Auto-generated method stub
-		//the operation which allowed for the current state to be shown
-		//is set(called on) when applying move or drag operations
-		// initial state has no operation
+
 		return this.op;
 	}
 
 	@Override
 	public int getPathLength() {
-		// TODO Auto-generated method stub
-		// initial state has path length 0 every operation after that increments it by 1
-		// drag operation is the number of equivalent sequence of move operations 
-		
-		//Note that any move operation increases the path length even if the player
-		//gets closer to the solution. So the path length is not the distance
-		//between initial state and current state but the number of puzzle states
-		//that are linked together in a sequence with the getParent() function.
+
 		return this.pathLength;
 	}
 
 	@Override
 	public PuzzleState move(int row, int column, Operation op) {
-		// TODO Auto-generated method stub
-		// check PuzzleState for directions
 		
-		
+		// create a newgrid that will represent the the next state after the movement
+		// copying the values from the parent grid to the newgrid where the newgrid is where the changes will be made
 		SimplePuzzleState newgrid = new SimplePuzzleState();
 		newgrid.grid = new int[grid.length][grid.length];
 		for (int i = 0; i < this.grid.length; i++) {
@@ -104,11 +81,10 @@ public class SimplePuzzleState implements PuzzleState {
 				newgrid.grid[i][j] = this.grid[i][j];
 			}
 		}
-		//newgrid.grid = this.grid;
 		
 		switch(op) {
 
-			case MOVERIGHT: { //MOVERIGHT
+			case MOVERIGHT: { 
 				if (isEmpty(row, column + 1)) {
 					newgrid.op = Operation.MOVERIGHT;
 					newgrid.parent = this;
@@ -163,13 +139,22 @@ public class SimplePuzzleState implements PuzzleState {
 		// first for one empty slot
 		// then for two empty slot
 		// then for three empty slots
+		
+		
+		// same as move, create newgrid which will represent the puzzle after the drag event
 		SimplePuzzleState newgrid = new SimplePuzzleState();
 		newgrid.grid = new int[grid.length][grid.length];
-		newgrid.grid = this.grid;
+		for (int i = 0; i < this.grid.length; i++) {
+			for(int j = 0; j < this.grid.length; j++) {
+				newgrid.grid[i][j] = this.grid[i][j];
+			}
+		}
 
-			
+		
 		if (isEmpty(endRow, endColumn)) {
 			
+			
+			// this is the condition that will satisfy whenever there is only on empty slot and the drag is in effect
 			if (((startRow - endRow == -1) && (startColumn - endColumn == 0)) || 
 				((startRow - endRow == 1) && (startColumn - endColumn == 0)) || 
 				((startColumn - endColumn == -1) && (startRow - endRow == 0)) ||
@@ -178,7 +163,6 @@ public class SimplePuzzleState implements PuzzleState {
 					int temp = newgrid.grid[startRow][startColumn];
 					newgrid.grid[startRow][startColumn] = 0;
 					newgrid.grid[endRow][endColumn] = temp;
-					newgrid.pathLength = this.pathLength + 1;
 					
 					if (startRow - endRow == -1) {
 						
@@ -200,6 +184,8 @@ public class SimplePuzzleState implements PuzzleState {
 					
 					return newgrid;		
 					
+					
+			// conditions that need to be true in order for drag to occur when there are two empty slots
 			}if (((startRow - endRow == -2) && (startColumn - endColumn == 0)) ||
 				((startRow - endRow == 2) && (startColumn - endColumn == 0)) ||
 				((startRow - endRow == 0) && (startColumn - endColumn == -2)) ||
@@ -214,14 +200,16 @@ public class SimplePuzzleState implements PuzzleState {
 					int temp = newgrid.grid[startRow][startColumn];
 					newgrid.grid[startRow][startColumn] = 0;
 					newgrid.grid[endRow][endColumn] = temp;
-					newgrid.pathLength = this.pathLength + 1;
 					
-					
+					// creating separate puzzle states in between to show that the drag is a result of individual movements
+					// newgrid is overriden  to provide parent classes
 					if ((startRow - endRow == -2) && (startColumn - endColumn == 0)) {
 						newgrid = (SimplePuzzleState) this.move(startRow, startColumn, Operation.MOVEUP).move(startRow + 1, startColumn, Operation.MOVEUP);
 					}
 					return newgrid;	
+			
 					
+			// conditions needed to be true in order to drag with 3 empty spaces
 			}if (((startRow - endRow == -3) && (startColumn - endColumn == 0)) ||
 					((startRow - endRow == 3) && (startColumn - endColumn == 0)) ||
 					((startRow - endRow == 0) && (startColumn - endColumn == -3)) ||
@@ -259,18 +247,17 @@ public class SimplePuzzleState implements PuzzleState {
 
 	@Override
 	public boolean isEmpty(int row, int column) {
-		//use getValue method to see if the value at the mouse click is a 0, if so return true.
 		
+		// checks that index is possible in the grid and not out of bounds
 		if (row >= grid.length || column >= grid.length || row < 0 || column < 0) {
 			return false;
 		}
 		
-		
+		// making sure that there is a position empty 
 		if (getValue(row,column) == 0) {
-			return true;
 			
+			return true;
 		}
-	
 		return false;
 	}
 
@@ -284,6 +271,7 @@ public class SimplePuzzleState implements PuzzleState {
 	
 	@Override
 	public boolean equals(Object ps) {
+		
 		if (ps == null) {
 			
 			return false;
@@ -291,7 +279,9 @@ public class SimplePuzzleState implements PuzzleState {
 		}if (getClass()!= ps.getClass()) {
 			
 			return false;
-
+		
+		// make the object a sure puzzle in order to test to see that the contents being compared in each grid are the same
+		// length is checked to see that the dimensions are the same meaning that they are grids of same size
 		}SimplePuzzleState state = (SimplePuzzleState) ps;
 		for (int i = 0; i < this.grid.length; i++) {
 			for(int j = 0; j < this.grid.length; j++) {
