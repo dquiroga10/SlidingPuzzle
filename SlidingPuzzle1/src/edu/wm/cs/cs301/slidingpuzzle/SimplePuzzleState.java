@@ -89,7 +89,7 @@ public class SimplePuzzleState implements PuzzleState {
 			case MOVERIGHT: { 
 				if (isEmpty(row, column + 1)) {
 					newgrid.op = Operation.MOVERIGHT;
-					newgrid.parent = this;
+					newgrid.parent = this; 
 					int temp = newgrid.grid[row][column];
 					newgrid.grid[row][column] = 0;
 					newgrid.grid[row][column+1] = temp;
@@ -136,12 +136,6 @@ public class SimplePuzzleState implements PuzzleState {
 
 	@Override
 	public PuzzleState drag(int startRow, int startColumn, int endRow, int endColumn) {
-		// TODO Auto-generated method stub
-		// check PuzzleState for directions
-		// first for one empty slot
-		// then for two empty slot
-		// then for three empty slots
-		
 		
 		// same as move, create newgrid which will represent the puzzle after the drag event
 		SimplePuzzleState newgrid = new SimplePuzzleState();
@@ -162,25 +156,25 @@ public class SimplePuzzleState implements PuzzleState {
 				((startColumn - endColumn == -1) && (startRow - endRow == 0)) ||
 				((startColumn - endColumn == 1)) && (startRow - endRow == 0)) {
 
-					int temp = newgrid.grid[startRow][startColumn];
+					/*int temp = newgrid.grid[startRow][startColumn];
 					newgrid.grid[startRow][startColumn] = 0;
-					newgrid.grid[endRow][endColumn] = temp;
+					newgrid.grid[endRow][endColumn] = temp;*/
 					
 					if (startRow - endRow == -1) {
 						
-						this.move(startRow, startColumn, Operation.MOVEUP);
+						newgrid = (SimplePuzzleState) this.move(startRow, startColumn, Operation.MOVEDOWN);
 						
 					}else if (startRow - endRow == 1) {
 						
-						this.move(startRow, startColumn, Operation.MOVEDOWN);
+						newgrid = (SimplePuzzleState) this.move(startRow, startColumn, Operation.MOVEUP);
 						
 					}else if (startColumn - endColumn == -1) {
 						
-						this.move(startRow, startColumn, Operation.MOVERIGHT);
+						newgrid = (SimplePuzzleState) this.move(startRow, startColumn, Operation.MOVERIGHT);
 						
 					}else if (startColumn - endColumn == 1) {
 						
-						this.move(startRow, startColumn, Operation.MOVELEFT);
+						newgrid = (SimplePuzzleState) this.move(startRow, startColumn, Operation.MOVELEFT);
 						
 					}
 					
@@ -188,6 +182,7 @@ public class SimplePuzzleState implements PuzzleState {
 					
 					
 			// conditions that need to be true in order for drag to occur when there are two empty slots
+			// two if statements inside each condition to check the two possible routes that may occur
 			}if (((startRow - endRow == -2) && (startColumn - endColumn == 0)) ||
 				((startRow - endRow == 2) && (startColumn - endColumn == 0)) ||
 				((startRow - endRow == 0) && (startColumn - endColumn == -2)) ||
@@ -197,46 +192,173 @@ public class SimplePuzzleState implements PuzzleState {
 				((startRow - endRow == -1) && (startColumn - endColumn == 1)) ||
 				((startRow - endRow == 1) && (startColumn - endColumn == -1)) ||
 				((startRow - endRow == 1) && (startColumn - endColumn == 1))) {
-				
-					
-					int temp = newgrid.grid[startRow][startColumn];
-					newgrid.grid[startRow][startColumn] = 0;
-					newgrid.grid[endRow][endColumn] = temp;
 					
 					// creating separate puzzle states in between to show that the drag is a result of individual movements
 					// newgrid is overriden  to provide parent classes
 					if ((startRow - endRow == -2) && (startColumn - endColumn == 0)) {
-						newgrid = (SimplePuzzleState) this.move(startRow, startColumn, Operation.MOVEUP).move(startRow + 1, startColumn, Operation.MOVEUP);
+						newgrid = (SimplePuzzleState) this.move(startRow, startColumn, Operation.MOVEDOWN).move(startRow + 1, startColumn, Operation.MOVEDOWN);
+						
+					}if ((startRow - endRow == 2) && (startColumn - endColumn == 0)) {
+						newgrid = (SimplePuzzleState) this.move(startRow, startColumn, Operation.MOVEUP).move(startRow - 1, startColumn, Operation.MOVEUP);
+						
+					}if ((startRow - endRow == 0) && (startColumn - endColumn == -2)) {
+						newgrid = (SimplePuzzleState) this.move(startRow, startColumn, Operation.MOVERIGHT).move(startRow, startColumn + 1, Operation.MOVERIGHT);
+						
+					}if ((startRow - endRow == 0) && (startColumn - endColumn == 2)) {
+						newgrid = (SimplePuzzleState) this.move(startRow, startColumn, Operation.MOVELEFT).move(startRow, startColumn - 1, Operation.MOVELEFT);
+						
 					}
+					// for each checking two possible paths that can be taken to see which path was taken
+					if ((startRow - endRow == -1) && (startColumn - endColumn == -1)) {
+						if (this.grid[startRow + 1][startColumn] == 0) {
+							newgrid = (SimplePuzzleState) this.move(startRow, startColumn, Operation.MOVEDOWN).move(startRow + 1, startColumn, Operation.MOVERIGHT);
+						}else if (this.grid[startRow][startColumn + 1] == 0) {
+							newgrid = (SimplePuzzleState) this.move(startRow, startColumn, Operation.MOVERIGHT).move(startRow, startColumn + 1, Operation.MOVEDOWN);
+						}
+
+					}if ((startRow - endRow == -1) && (startColumn - endColumn == 1)) {
+						if (this.grid[startRow + 1][startColumn] == 0) {
+							newgrid = (SimplePuzzleState) this.move(startRow, startColumn, Operation.MOVEDOWN).move(startRow + 1, startColumn, Operation.MOVELEFT);
+						}else if (this.grid[startRow][startColumn - 1] == 0) {
+							newgrid = (SimplePuzzleState) this.move(startRow, startColumn, Operation.MOVELEFT).move(startRow, startColumn - 1, Operation.MOVEDOWN);
+						}
+
+					}if ((startRow - endRow == 1) && (startColumn - endColumn == -1)) {
+						if (this.grid[startRow - 1][startColumn] == 0) {
+							newgrid = (SimplePuzzleState) this.move(startRow, startColumn, Operation.MOVEUP).move(startRow - 1, startColumn, Operation.MOVERIGHT);
+						}else if (this.grid[startRow][startColumn + 1] == 0) {
+							newgrid = (SimplePuzzleState) this.move(startRow, startColumn, Operation.MOVERIGHT).move(startRow, startColumn + 1, Operation.MOVEUP);
+						}
+
+					}if ((startRow - endRow == 1) && (startColumn - endColumn == 1)) {
+						if (this.grid[startRow - 1][startColumn] == 0) {
+							newgrid = (SimplePuzzleState) this.move(startRow, startColumn, Operation.MOVEUP).move(startRow - 1, startColumn, Operation.MOVELEFT);
+						}else if (this.grid[startRow][startColumn - 1] == 0) {
+							newgrid = (SimplePuzzleState) this.move(startRow, startColumn, Operation.MOVELEFT).move(startRow, startColumn - 1, Operation.MOVEUP);
+						}
+					}
+				
 					return newgrid;	
 			
 					
 			// conditions needed to be true in order to drag with 3 empty spaces
-			}if (((startRow - endRow == -3) && (startColumn - endColumn == 0)) ||
-					((startRow - endRow == 3) && (startColumn - endColumn == 0)) ||
-					((startRow - endRow == 0) && (startColumn - endColumn == -3)) ||
-					((startRow - endRow == 0) && (startColumn - endColumn == 3)) ||
+			// 3 different ways of making the move therefore need to check each condition to see which move is being processed
+			}if (((startRow - endRow == -3) && (startColumn - endColumn == 0)) || //
+					((startRow - endRow == 3) && (startColumn - endColumn == 0)) || //
+					((startRow - endRow == 0) && (startColumn - endColumn == -3)) || //
+					((startRow - endRow == 0) && (startColumn - endColumn == 3)) || //
 					
-					((startRow - endRow == -2) && (startColumn - endColumn == -1)) || 
-					((startRow - endRow == -2) && (startColumn - endColumn == 1)) ||
-					((startRow - endRow == 2) && (startColumn - endColumn == -1)) ||
+					((startRow - endRow == -2) && (startColumn - endColumn == -1)) || //
+					((startRow - endRow == -2) && (startColumn - endColumn == 1)) || // 
+					((startRow - endRow == 2) && (startColumn - endColumn == -1)) || //
 					((startRow - endRow == 2) && (startColumn - endColumn == 1)) ||
 					
-					((startRow - endRow == -1) && (startColumn - endColumn == -2)) || 
-					((startRow - endRow == -1) && (startColumn - endColumn == 2)) ||
-					((startRow - endRow == 1) && (startColumn - endColumn == -2)) ||
-					((startRow - endRow == 1) && (startColumn - endColumn == 2))) {
+					((startRow - endRow == -1) && (startColumn - endColumn == -2)) || //
+					((startRow - endRow == -1) && (startColumn - endColumn == 2)) || //
+					((startRow - endRow == 1) && (startColumn - endColumn == -2)) || // 
+					((startRow - endRow == 1) && (startColumn - endColumn == 2))) { //
 
-						int temp = newgrid.grid[startRow][startColumn];
-						newgrid.grid[startRow][startColumn] = 0;
-						newgrid.grid[endRow][endColumn] = temp;
-						newgrid.pathLength = this.pathLength + 1;
-						return newgrid;	
+						if ((startRow - endRow == -3) && (startColumn - endColumn == 0)) {
+							newgrid = (SimplePuzzleState) this.move(startRow, startColumn, Operation.MOVEDOWN).move(startRow + 1, startColumn, Operation.MOVEDOWN).move(startRow + 2, startColumn, Operation.MOVEDOWN);
+							
+						}if ((startRow - endRow == 3) && (startColumn - endColumn == 0)) {
+							newgrid = (SimplePuzzleState) this.move(startRow, startColumn, Operation.MOVEUP).move(startRow - 1, startColumn, Operation.MOVEUP).move(startRow - 2, startColumn, Operation.MOVEUP);
+							
+						}if ((startRow - endRow == 0) && (startColumn - endColumn == -3)) {
+							newgrid = (SimplePuzzleState) this.move(startRow, startColumn, Operation.MOVERIGHT).move(startRow, startColumn + 1, Operation.MOVERIGHT).move(startRow, startColumn + 2, Operation.MOVERIGHT);
+							
+						}if ((startRow - endRow == 0) && (startColumn - endColumn == 3)) {
+							newgrid = (SimplePuzzleState) this.move(startRow, startColumn, Operation.MOVELEFT).move(startRow, startColumn - 1, Operation.MOVELEFT).move(startRow, startColumn - 2, Operation.MOVELEFT);
+							
+						}
 						
+						// second four (out of order this is third group)
+						
+						if ((startRow - endRow == -1) && (startColumn - endColumn == -2)) {
+							if ((this.grid[startRow + 1][startColumn] == 0) && (this.grid[startRow+1][startColumn + 1] == 0)) {
+								newgrid = (SimplePuzzleState) this.move(startRow, startColumn, Operation.MOVEDOWN).move(startRow + 1, startColumn, Operation.MOVERIGHT).move(startRow + 1, startColumn + 1, Operation.MOVERIGHT);
+							}else if ((this.grid[startRow][startColumn + 1] == 0) && (this.grid[startRow ][startColumn + 2] == 0)) {
+								newgrid = (SimplePuzzleState) this.move(startRow, startColumn, Operation.MOVERIGHT).move(startRow, startColumn + 1, Operation.MOVERIGHT).move(startRow, startColumn + 2, Operation.MOVEDOWN);
+							}else if ((this.grid[startRow][startColumn + 1] == 0) && (this.grid[startRow + 1][startColumn + 1] == 0)) {
+								newgrid = (SimplePuzzleState) this.move(startRow, startColumn, Operation.MOVERIGHT).move(startRow, startColumn + 1, Operation.MOVEDOWN).move(startRow + 1, startColumn + 1, Operation.MOVERIGHT);
+							}
+							
+							
+						}if ((startRow - endRow == 1) && (startColumn - endColumn == -2)) {
+							if ((this.grid[startRow - 1][startColumn] == 0) && (this.grid[startRow - 1][startColumn + 1] == 0)) {
+								newgrid = (SimplePuzzleState) this.move(startRow, startColumn, Operation.MOVEUP).move(startRow - 1, startColumn, Operation.MOVERIGHT).move(startRow - 1, startColumn + 1, Operation.MOVERIGHT);
+							}else if ((this.grid[startRow][startColumn + 1] == 0) && (this.grid[startRow ][startColumn + 2] == 0)) {
+								newgrid = (SimplePuzzleState) this.move(startRow, startColumn, Operation.MOVERIGHT).move(startRow, startColumn + 1, Operation.MOVERIGHT).move(startRow, startColumn + 2, Operation.MOVEUP);
+							}else if ((this.grid[startRow][startColumn + 1] == 0) && (this.grid[startRow - 1][startColumn + 1] == 0)) {
+								newgrid = (SimplePuzzleState) this.move(startRow, startColumn, Operation.MOVERIGHT).move(startRow, startColumn + 1, Operation.MOVEUP).move(startRow - 1, startColumn + 1, Operation.MOVERIGHT);
+							}
+							
+						
+						}if ((startRow - endRow == -1) && (startColumn - endColumn == 2)) {
+							if ((this.grid[startRow + 1][startColumn] == 0) && (this.grid[startRow+1][startColumn - 1] == 0)) {
+								newgrid = (SimplePuzzleState) this.move(startRow, startColumn, Operation.MOVEDOWN).move(startRow + 1, startColumn, Operation.MOVELEFT).move(startRow + 1, startColumn - 1, Operation.MOVELEFT);
+							}else if ((this.grid[startRow][startColumn - 1] == 0) && (this.grid[startRow ][startColumn - 2] == 0)) {
+								newgrid = (SimplePuzzleState) this.move(startRow, startColumn, Operation.MOVELEFT).move(startRow, startColumn - 1, Operation.MOVELEFT).move(startRow, startColumn - 2, Operation.MOVEDOWN);
+							}else if ((this.grid[startRow][startColumn - 1] == 0) && (this.grid[startRow + 1][startColumn - 1] == 0)) {
+								newgrid = (SimplePuzzleState) this.move(startRow, startColumn, Operation.MOVELEFT).move(startRow, startColumn - 1, Operation.MOVEDOWN).move(startRow + 1, startColumn - 1, Operation.MOVELEFT);
+							}
+							
+							
+						}if ((startRow - endRow == 1) && (startColumn - endColumn == 2)) {
+							if ((this.grid[startRow - 1][startColumn] == 0) && (this.grid[startRow - 1][startColumn - 1] == 0)) {
+								newgrid = (SimplePuzzleState) this.move(startRow, startColumn, Operation.MOVEUP).move(startRow - 1, startColumn, Operation.MOVELEFT).move(startRow - 1, startColumn - 1, Operation.MOVELEFT);
+							}else if ((this.grid[startRow][startColumn - 1] == 0) && (this.grid[startRow ][startColumn - 2] == 0)) {
+								newgrid = (SimplePuzzleState) this.move(startRow, startColumn, Operation.MOVELEFT).move(startRow, startColumn - 1, Operation.MOVELEFT).move(startRow, startColumn - 2, Operation.MOVEUP);
+							}else if ((this.grid[startRow][startColumn - 1] == 0) && (this.grid[startRow - 1][startColumn - 1] == 0)) {
+								newgrid = (SimplePuzzleState) this.move(startRow, startColumn, Operation.MOVELEFT).move(startRow, startColumn - 1, Operation.MOVEUP).move(startRow - 1, startColumn - 1, Operation.MOVELEFT);
+							}
+						}
+						
+						// third four (out of order this is second group)
+						
+						if ((startRow - endRow == -2) && (startColumn - endColumn == -1)) {
+							if ((this.grid[startRow + 1][startColumn] == 0) && (this.grid[startRow + 2][startColumn] == 0)) {
+								newgrid = (SimplePuzzleState) this.move(startRow, startColumn, Operation.MOVEDOWN).move(startRow + 1, startColumn, Operation.MOVEDOWN).move(startRow + 2, startColumn, Operation.MOVERIGHT);
+							}else if((this.grid[startRow + 1][startColumn] == 0) && (this.grid[startRow + 1][startColumn + 1] == 0)) {
+								newgrid = (SimplePuzzleState) this.move(startRow, startColumn, Operation.MOVEDOWN).move(startRow + 1, startColumn, Operation.MOVERIGHT).move(startRow + 1, startColumn + 1, Operation.MOVEDOWN);
+							}else if ((this.grid[startRow][startColumn + 1] == 0) && (this.grid[startRow + 1][startColumn + 1] == 0)) {
+								newgrid = (SimplePuzzleState) this.move(startRow, startColumn, Operation.MOVERIGHT).move(startRow, startColumn + 1, Operation.MOVEDOWN).move(startRow + 1, startColumn + 1, Operation.MOVEDOWN);
+							}
+							
+							
+						}if ((startRow - endRow == -2) && (startColumn - endColumn == 1)) {
+							if ((this.grid[startRow + 1][startColumn] == 0) && (this.grid[startRow + 2][startColumn] == 0)) {
+								newgrid = (SimplePuzzleState) this.move(startRow, startColumn, Operation.MOVEDOWN).move(startRow + 1, startColumn, Operation.MOVEDOWN).move(startRow + 2, startColumn, Operation.MOVELEFT);
+							}else if((this.grid[startRow + 1][startColumn] == 0) && (this.grid[startRow + 1][startColumn - 1] == 0)) {
+								newgrid = (SimplePuzzleState) this.move(startRow, startColumn, Operation.MOVEDOWN).move(startRow + 1, startColumn, Operation.MOVELEFT).move(startRow + 1, startColumn - 1, Operation.MOVEDOWN);
+							}else if ((this.grid[startRow][startColumn - 1] == 0) && (this.grid[startRow + 1][startColumn - 1] == 0)) {
+								newgrid = (SimplePuzzleState) this.move(startRow, startColumn, Operation.MOVELEFT).move(startRow, startColumn - 1, Operation.MOVEDOWN).move(startRow + 1, startColumn - 1, Operation.MOVEDOWN);
+							}
+							
+							
+							
+						}if ((startRow - endRow == 2) && (startColumn - endColumn == -1)) {
+							if ((this.grid[startRow - 1][startColumn] == 0) && (this.grid[startRow - 2][startColumn] == 0)) {
+								newgrid = (SimplePuzzleState) this.move(startRow, startColumn, Operation.MOVEUP).move(startRow - 1, startColumn, Operation.MOVEUP).move(startRow - 2, startColumn, Operation.MOVERIGHT);
+							}else if((this.grid[startRow - 1][startColumn] == 0) && (this.grid[startRow - 1][startColumn + 1] == 0)) {
+								newgrid = (SimplePuzzleState) this.move(startRow, startColumn, Operation.MOVEUP).move(startRow - 1, startColumn, Operation.MOVERIGHT).move(startRow - 1, startColumn + 1, Operation.MOVEUP);
+							}else if ((this.grid[startRow][startColumn + 1] == 0) && (this.grid[startRow - 1][startColumn + 1] == 0)) {
+								newgrid = (SimplePuzzleState) this.move(startRow, startColumn, Operation.MOVERIGHT).move(startRow, startColumn + 1, Operation.MOVEUP).move(startRow - 1, startColumn + 1, Operation.MOVEUP);
+							}
+							
+							
+						}if ((startRow - endRow == 2) && (startColumn - endColumn == 1)) {
+							if ((this.grid[startRow - 1][startColumn] == 0) && (this.grid[startRow - 2][startColumn] == 0)) {
+								newgrid = (SimplePuzzleState) this.move(startRow, startColumn, Operation.MOVEUP).move(startRow - 1, startColumn, Operation.MOVEUP).move(startRow - 2, startColumn, Operation.MOVELEFT);
+							}else if((this.grid[startRow - 1][startColumn] == 0) && (this.grid[startRow - 1][startColumn - 1] == 0)) {
+								newgrid = (SimplePuzzleState) this.move(startRow, startColumn, Operation.MOVEUP).move(startRow - 1, startColumn, Operation.MOVELEFT).move(startRow - 1, startColumn - 1, Operation.MOVEUP);
+							}else if ((this.grid[startRow][startColumn - 1] == 0) && (this.grid[startRow - 1][startColumn - 1] == 0)) {
+								newgrid = (SimplePuzzleState) this.move(startRow, startColumn, Operation.MOVELEFT).move(startRow, startColumn - 1, Operation.MOVEUP).move(startRow - 1, startColumn - 1, Operation.MOVEUP);
+							}
+						}
+						return newgrid;			
 			}
 		}
-		
-		
 		return null;
 	}
 
