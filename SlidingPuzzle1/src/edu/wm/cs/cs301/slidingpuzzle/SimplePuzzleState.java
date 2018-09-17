@@ -396,17 +396,24 @@ public class SimplePuzzleState implements PuzzleState {
 	@Override
 	public boolean equals(Object ps) {
 		
+		if (this == ps) {
+			return true;
+		}
+		
 		if (ps == null) {
 			
 			return false;
 			
-		}if (getClass()!= ps.getClass()) {
+		}if (this.getClass()!= ps.getClass()) {
 			
 			return false;
 		
 		// make the object a sure puzzle in order to test to see that the contents being compared in each grid are the same
 		// length is checked to see that the dimensions are the same meaning that they are grids of same size
 		}SimplePuzzleState state = (SimplePuzzleState) ps;
+		if (this == state) {
+			return true;
+		}
 		for (int i = 0; i < this.grid.length; i++) {
 			for(int j = 0; j < this.grid.length; j++) {
 				if(this.grid[i][j] != state.grid[i][j] || this.grid.length != state.grid.length) {
@@ -416,6 +423,15 @@ public class SimplePuzzleState implements PuzzleState {
 		}
 		
 		return true;
+	}
+	
+	@Override
+	// create unique hash method based on what is given in the puzzle state
+	public int hashCode() {
+		
+		int temp = (this.grid.length + ((this.grid.length + 3)/4));
+		int hash = this.grid.length + (temp*temp);
+		return hash;
 	}
 	
 	
