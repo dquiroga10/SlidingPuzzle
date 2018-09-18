@@ -381,7 +381,6 @@ public class SimplePuzzleState implements PuzzleState {
 		newgrid.grid = new int[this.grid.length][this.grid.length];
 		for (int i = 0; i < this.grid.length; i++) {
 			for(int j = 0; j < this.grid.length; j++) {
-				System.out.println(this.grid[i][j]);
 				newgrid.grid[i][j] = this.grid[i][j];
 				if (this.grid[i][j] == 0) {
 					emptySquares += 1;
@@ -467,7 +466,8 @@ public class SimplePuzzleState implements PuzzleState {
 	public PuzzleState getStateWithShortestPath() {
 		// TODO Auto-generated method stub
 		// check PuzzleState for directions
-		return null;
+		
+		return this;
 	}
 	
 	
