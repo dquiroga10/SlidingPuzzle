@@ -1,5 +1,7 @@
 package edu.wm.cs.cs301.slidingpuzzle;
 
+import java.util.Random;
+
 
 public class SimplePuzzleState implements PuzzleState {
 	
@@ -366,7 +368,67 @@ public class SimplePuzzleState implements PuzzleState {
 	public PuzzleState shuffleBoard(int pathLength) {
 		// TODO Auto-generated method stub
 		// check PuzzleState for directions
-		return null;
+		
+		
+		SimplePuzzleState newgrid = new SimplePuzzleState();
+		newgrid.grid = new int[grid.length][grid.length];
+		for (int i = 0; i < this.grid.length; i++) {
+			for(int j = 0; j < this.grid.length; j++) {
+				newgrid.grid[i][j] = this.grid[i][j];
+			}
+		}
+		int[][] emptySpots = new int [this.emptySlots][2];
+		int posEmp = 0;
+		for (int i = 0; i < this.grid.length; i++) {
+			for (int j = 0; j < this.grid.length; j++) {
+				if (this.grid[i][j] == 0) {
+					emptySpots[posEmp][0] = i;
+					emptySpots[posEmp][1] = j;
+					posEmp += 1;
+				}
+			}
+		}
+		Random rand = new Random();
+		int count = 0;
+		while (count < pathLength) {
+			int randint1 = rand.nextInt(4); // the separate movements are chosen at random
+			int randint2 = rand.nextInt(this.emptySlots); // the random empty slot is chosen
+			
+			
+			
+			if (randint1 == 0) {
+				if (emptySpots[randint2][0] > 0 && isEmpty(emptySpots[randint2][0] - 1, emptySpots[randint2][1]) == false) {
+					newgrid = (SimplePuzzleState) newgrid.move(emptySpots[randint2][0] - 1, emptySpots[randint2][1], Operation.MOVEDOWN);
+					count += 1;
+					emptySpots[randint2][0] = emptySpots[randint2][0] - 1;
+					//return newgrid;
+				}
+				
+			}else if (randint1 == 1 ) {
+				if (emptySpots[randint2][0] < this.grid.length - 1 && isEmpty(emptySpots[randint2][0] + 1, emptySpots[randint2][1]) == false) {
+					newgrid = (SimplePuzzleState) newgrid.move(emptySpots[randint2][0] + 1, emptySpots[randint2][1], Operation.MOVEUP);
+					count += 1;
+					emptySpots[randint2][0] = emptySpots[randint2][0] + 1;
+					//return newgrid;
+				}
+			}else if (randint1 == 2) {
+				if (emptySpots[randint2][1] < this.grid.length - 1 && isEmpty(emptySpots[randint2][0], emptySpots[randint2][1] + 1) == false) {
+					newgrid = (SimplePuzzleState) newgrid.move(emptySpots[randint2][0], emptySpots[randint2][1] + 1, Operation.MOVELEFT);
+					count += 1;
+					emptySpots[randint2][1] = emptySpots[randint2][1] + 1;
+					//return newgrid;
+				}
+			
+			}else if (randint1 == 3) {
+				if (emptySpots[randint2][1] > 0 && isEmpty(emptySpots[randint2][0], emptySpots[randint2][1] - 1) == false) {
+					newgrid = (SimplePuzzleState) newgrid.move(emptySpots[randint2][0], emptySpots[randint2][1] - 1, Operation.MOVERIGHT);
+					count += 1;
+					emptySpots[randint2][1] = emptySpots[randint2][1] - 1;
+					//return newgrid;
+				}
+			}
+			
+		}return newgrid;
 	}
 
 	@Override
@@ -407,13 +469,23 @@ public class SimplePuzzleState implements PuzzleState {
 		}if (this.getClass()!= ps.getClass()) {
 			
 			return false;
+		}
+		
 		
 		// make the object a sure puzzle in order to test to see that the contents being compared in each grid are the same
 		// length is checked to see that the dimensions are the same meaning that they are grids of same size
-		}SimplePuzzleState state = (SimplePuzzleState) ps;
+		SimplePuzzleState state = (SimplePuzzleState) ps;
 		if (this == state) {
 			return true;
 		}
+		if (this.grid == null && state.grid == null) {
+			return true;
+		}else if (this.grid == null && state.grid != null) {
+			return false;
+		}else if (this.grid != null && state.grid == null) {
+			return false;
+		}
+		
 		for (int i = 0; i < this.grid.length; i++) {
 			for(int j = 0; j < this.grid.length; j++) {
 				if(this.grid[i][j] != state.grid[i][j] || this.grid.length != state.grid.length) {
@@ -421,6 +493,8 @@ public class SimplePuzzleState implements PuzzleState {
 				}
 			}
 		}
+		
+		
 		
 		return true;
 	}
