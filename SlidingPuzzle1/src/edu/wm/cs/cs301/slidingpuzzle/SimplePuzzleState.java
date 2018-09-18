@@ -375,6 +375,7 @@ public class SimplePuzzleState implements PuzzleState {
 	public PuzzleState shuffleBoard(int pathLength) {
 		
 		// create a copy of the parent grid in order to have the work be done to it
+		// emptySquares is to keep track of how many this.emptySlots is
 		emptySquares = 0;
 		SimplePuzzleState newgrid = new SimplePuzzleState();
 		newgrid.grid = new int[this.grid.length][this.grid.length];
@@ -387,7 +388,7 @@ public class SimplePuzzleState implements PuzzleState {
 				}
 			}
 		}
-		
+		this.emptySlots = emptySquares;
 		
 		// populate an array with the cordinates of the empty slots
 		// keep track of where in the array it is located with local variable posEmp which should equal the number of empty slots
@@ -516,9 +517,6 @@ public class SimplePuzzleState implements PuzzleState {
 				}
 			}
 		}
-		
-		
-		
 		return true;
 	}
 	
