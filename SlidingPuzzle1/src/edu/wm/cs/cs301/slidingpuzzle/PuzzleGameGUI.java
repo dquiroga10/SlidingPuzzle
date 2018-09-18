@@ -187,6 +187,7 @@ public class PuzzleGameGUI extends Frame implements ActionListener, MouseListene
 				null, options, options[0]);
 		switch (n) {
 		case 0: // yes
+			//initBoard();
 			shuffleBoard();
 			repaint();
 			break ;
